@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width initial-scale=1.0">
+    <title> constructor for census </title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital@0;1&display=swap" rel="stylesheet">
+    <link href="./c-census.css" rel="stylesheet">
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.0/chart.min.js"></script>
+</head>
+
+<body>
+    <main>
+        <!-- Nav bar -->
+        <header>
+            <div>census2008</div>
+            <div style="font-family: Arial;">
+                <span><a href="#">Home</a> </span> <span><a href="#arrowTxt">Download</a></span>
+            </div>
+        </header>
+        <!-- First layout for suming-->
+        <div id="summing-population">
+            <div id="totalPopulation">
+                <div class="population-icon"><img src="./people.png" class="icon" alt="people"></div>
+                <div>
+                    <div> <small class="population-text">Total Population</small></div>
+                    <div id="POPULATION">3,000,000</div>
+                </div>
+            </div>
+            <div id="female">
+                <div class="female-icon"><img src="./female.png" class="icon" alt="female"></div>
+                <div>
+                    <div> <small style="color: #828282;">FEMALE</small></div>
+                    <div id="femaleData">1,500,000</div>
+                </div>
+            </div>
+            <div id="male">
+                <div class="male-icon"><img src="./male.png" class="icon" alt="male"></div>
+                <div>
+                    <div> <small style="color: #828282;">MALE</small></div>
+                    <div id="maleData">1,500,000</div>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div id="countysPopulation">
+
+            <!-- Bar-Chart of total county -->
+            <div id="countyByDistrict">
+                <div> <strong>Distribution of Population by County</strong></div>
+                <div class="bar-cha"><canvas id="county-chart"></canvas></div>
+            </div>
+
+            <!-- doughnutChart of total male and female -->
+            <div id="doughnutChart">
+                <canvas id="doughnut-chart" width="200" height="100"></canvas>
+            </div>
+        </div>
+        <!-- Distribution of Population by District -->
+        <div id="distributionByDistrict">
+
+            <div id="distribute-district">
+                <div> Distribution of Population by District </div>
+                <!-- Select district -->
+                <div id="district-label">
+                    <select onchange="" id="county-districts-selection"> 
+                        <option value="select"disabled>Select</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="district-chart" style="position: relative;"> <canvas id="district"></canvas></div>
+
+        </div>
+        <!-- Download 2008 Census data -->
+        <div id="downloadData">
+            <div> Download 2008 Census data</div>
+            <!-- white bgcol and display flex -->
+            <div id="arrowTxt">
+                <div id="arrow">
+                    <a href="./census-2008.json" title="download census 2008" download="census-2008.json">
+                        <img src=" ./download.png" width="29" height="30">
+                    </a>
+                </div>
+                <div id="downloadText"><a href="" style="color:#519872;">
+                    DOWNLOAD</a>
+                </div>
+            </div>
+        </div>
+        <!-- Distribution of Population by Number of Households -->
+        <div id="distributionByHousehold">
+            <div id="housesData">
+                <div id="housesText">
+                    <div> Distribution of Population by House </div>
+                    <!-- Select district -->
+                    <div>
+                        <select onchange="" id="county-houses-selection">
+                            <option value="select" disabled>Select</option>
+                        </select>
+                    </div>
+                </div><br> <br> <br>
+                <div class="houses-chart" style="position: relative;"><canvas id="houses-chart"></canvas></div>
+            </div>
+            <div id="mostPopulationPerCouunty">
+                <div>Counties with most males & females
+                </div> <br>
+                <div>
+                    <table>
+                        <tbody>
+                            <tr id="table-head">
+                                <th>County</th>
+                                <th>Male</th>
+                                <th>Female</th>
+                            </tr>
+                            <tr id="populate">
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+    <b style="color: #519872; margin: auto 40%;">&copy;benjamin-a-ngafua</b>
+</body>
+
+</html>

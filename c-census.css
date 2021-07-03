@@ -1,0 +1,300 @@
+/* General effect */
+
+* {
+    box-sizing: border-box;
+}
+
+a {
+    text-decoration: none;
+    color: #519872;
+    cursor: pointer;
+}
+
+body {
+    background-color: #e7e6ee;
+    font-family: 'Source Code Pro', monospace;
+}
+
+.icon {
+    width: 80%;
+}
+
+
+/* Cenus title and navigation field */
+
+header {
+    margin: 3% 5%;
+    display: grid;
+    color: #519872;
+    font-size: large;
+    font-weight: bolder;
+    grid-template-columns: auto 28%;
+}
+
+
+/* summing-population for total population for male and female and the country total*/
+
+#summing-population {
+    display: grid;
+    grid-template-columns: 29% 28.9% 30%;
+    margin-left: 5%;
+    gap: 2%;
+}
+
+.population-text {
+    color: #828282;
+}
+
+select {
+    text-align: center;
+    font-size: larger;
+    border-color: #519872;
+    cursor: pointer;
+}
+
+#summing-population>#totalPopulation,
+#female,
+#male {
+    display: flex;
+    align-items: center;
+    padding: 10px 10px 10px 20px;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-weight: bolder;
+    color: rgb(26, 25, 25);
+}
+
+#summing-population>#male {
+    width: 100%;
+    gap: 4%;
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    background-color: white;
+}
+
+#summing-population>#totalPopulation {
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    gap: 4%;
+    background-color: white;
+}
+
+.female-icon,
+.male-icon,
+.population-icon {
+    background-color: #376e51;
+    padding: 0.1%;
+    border-radius: 5%;
+    text-align: center;
+}
+
+#summing-population>#female {
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    gap: 4%;
+    background-color: white;
+}
+
+
+/* Second layout for countyies bar chart and doughnut chart */
+
+#countysPopulation {
+    display: grid;
+    grid-template-columns: 60% 30%;
+    margin-left: 5%;
+    margin-bottom: 2%;
+    gap: 2%;
+}
+
+#countyByDistrict {
+    position: relative;
+    display: grid;
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    background-color: white;
+    width: 100%;
+    padding: 3% 0% 0% 5%;
+}
+
+.bar-cha {
+    position: relative;
+    width: 50vw;
+    height: 55vh;
+}
+
+#doughnutChart {
+    position: relative;
+    background-color: #376e51;
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    width: 100%;
+    padding-top: 50px;
+    border-radius: 5px;
+}
+
+
+/* Third layout for district population bar chart */
+
+#distributionByDistrict {
+    position: relative;
+    display: grid;
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    background-color: white;
+    margin-left: 5%;
+    border-radius: 5px;
+    padding-left: 15px;
+    width: 87%;
+    padding: 1% 0% 0% 5%;
+    height: 460px;
+}
+
+.district-chart {
+    width: 80vw;
+    height: 55vh;
+}
+
+#distribute-district {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    padding: 2% 0% 0%;
+}
+
+
+/* Fourth layout for Downlow */
+
+#downloadData {
+    display: grid;
+    grid-template-columns: 60% 30%;
+    justify-content: center;
+    margin-top: 2%;
+    padding: 2%;
+    background-color: #519874;
+    color: white;
+    margin-left: 5%;
+    border-radius: 5px;
+    width: 87.2%;
+}
+
+#downloadData>div {
+    font-size: 25px;
+    font-weight: bolder;
+}
+
+#arrowTxt {
+    display: flex;
+    align-items: center;
+    background-color: white;
+    border-radius: 2%;
+    color: #519872;
+    border-radius: 5px;
+    margin: auto;
+    padding: 3.5%;
+    gap: 2%;
+}
+
+#arrow {
+    background-color: #519872;
+    height: 35px;
+    width: 39px;
+    text-align: center;
+    border-radius: 5px;
+}
+
+
+/* fifth layout for households and highest male and female of counties */
+
+#distributionByHousehold {
+    display: grid;
+    grid-template-columns: 60% 30%;
+    margin: 1% 0% 5% 5%;
+    margin-top: 1%;
+    gap: 2%;
+}
+
+#housesText {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    padding: 2% 0% 0%;
+}
+
+#housesData {
+    position: relative;
+    padding: 3% 0% 0% 5%;
+}
+
+#distributionByHousehold>#housesData,
+#mostPopulationPerCouunty {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
+    width: 100%;
+}
+
+.houses-chart {
+    position: relative;
+    margin: -5% 2% 2% 2%;
+    width: 95%;
+    border-radius: 5px;
+}
+
+#mostPopulationPerCouunty {
+    padding: 2%;
+    text-align: left;
+}
+
+
+/* Table for highest male and female of counties */
+
+#table-head {
+    background-color: #519872;
+    text-align: center;
+    color: white;
+}
+
+tbody,
+th {
+    border: 1px solid #519872;
+    border-bottom: 2px groove rgb(4, 101, 121);
+}
+
+table {
+    position: relative;
+    width: 100%;
+}
+
+table,
+tbody,
+tr,
+th {
+    padding-bottom: 2%;
+    border-collapse: collapse;
+}
+
+@media (max-width: 720px) {
+    body {
+        display: block;
+    }
+    b,
+    strong {
+        font-size: 12px;
+    }
+    .population-text {
+        font-size: xx-small;
+    }
+    #downloadData>div {
+        padding-top: 3%;
+        font-size: 15px;
+        font-weight: bolder;
+    }
+    #countysPopulation {
+        display: block;
+        margin: 5%;
+        width: 87%;
+    }
+    #doughnutChart {
+        margin-top: 5%;
+    }
+    #distributionByHousehold {
+        display: block;
+        width: 87%;
+    }
+    .female-icon>.icon,
+    .population-icon>.icon {
+        width: 30px;
+    }
+}

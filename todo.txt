@@ -1,0 +1,50 @@
+## Census 2008
+
+0.  [] Make the layout
+
+1.  [] Get data
+        *fetch data from json
+
+2.  [] Show total poulation
+        i. calculate total population
+        ii. display total population
+
+3.  [] Show total male
+        i. calculate total male
+        ii. display total male
+
+4.  [] Find total female
+       i. calculate total female
+       ii. display total female
+
+5.  [] Show bar chart of population per county
+       i. get each county
+       ii. sum total male and female
+       iii. insert counties in bar chart
+       iv. insert sum in bar chart
+       v. display bar chart of county
+
+6.  [] Show doughnut chart of population per gender
+       i. insert total sum of male 
+       ii. insert total sum of female 
+       iii. show color seperately for male and female in doughnut chart
+       iv. Set legend to round and position bottom
+       v. display doughnut chart of male and female
+
+7.  [] Show bar chart of population per district
+       i. get each county with its districts
+       ii. insert sum of male and female values in bar chart
+       iii. insert district name in bar chart 
+       iv. display bar chart of district
+
+8. [] Show bar chart of population per household
+       i. get each county in its households data
+       ii. insert sum of male and female values in bar chart
+       iii. display bar chart of household
+
+9.  [] Show table of counties with most male and female
+       i. get each county
+       ii. get sum of most male and female per county
+       iii. sort most male and female in descending order
+       iv. insert county name in table 
+       v. display table of counties with most male and female
