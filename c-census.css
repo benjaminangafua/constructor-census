@@ -65,7 +65,7 @@ select {
 }
 
 #summing-population>#male {
-    width: 100%;
+    /* width: 100%; */
     gap: 4%;
     box-shadow: 2px 3px rgba(173, 171, 171, 0.533);
     background-color: white;
@@ -296,5 +296,22 @@ th {
     .female-icon>.icon,
     .population-icon>.icon {
         width: 30px;
+    }
+    #summing-population {
+        display: block;
+        gap: 5%;
+    }
+    #downloadData {
+        grid-template-columns: auto;
+    }
+    #totalPopulation,
+    #female,
+    #male {
+        margin-top: 4%;
+        width: 92%;
+    }
+    #arrow {
+        height: 30px;
+        width: 39px;
     }
 }
