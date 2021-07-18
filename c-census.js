@@ -4,21 +4,25 @@ const CENSUS_2008 = {
     total_population: 0,
     total_male: 0,
     total_female: [],
-    fetchData() {
+    fetchData: function() {
         fetch("./c-census.json")
             .then(resp => resp.json())
             .then(data => {
-
-                console.log(data.population);
-                // this.population = data.population
-                data.population.reduce((acc, cur) => console.log(acc + cur.male), 0)
-
-
+                this.population = data.population
+                this.CalculateTotalPopulation(this.population)
             })
     },
-    setupfunction() {
+    CalculateTotalPopulation: function(population) {
+        this.total_population = population.reduce((acc, cur) => (acc + cur.male + cur.female), 0)
+        return this.total_population
+    },
+    CalculateTotalMale: function() {},
+    CalculateTotalFemale: function() {},
+    SetupFunctions: function() {
         this.fetchData();
+        this.CalculateTotalMale();
+        console.log(this.CalculateTotalPopulation.value);
     }
 
 };
-CENSUS_2008.setupfunction();
+CENSUS_2008.SetupFunctions();
