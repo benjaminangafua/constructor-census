@@ -51,7 +51,7 @@
 
             <!-- Bar-Chart of total county -->
             <div id="countyByDistrict">
-                <div> <strong>Distribution of Population by County</strong></div>
+                <div> <strong>Population by County</strong></div>
                 <div class="bar-cha"><canvas id="county-chart"></canvas></div>
             </div>
 
@@ -60,11 +60,11 @@
                 <canvas id="doughnut-chart" width="200" height="100"></canvas>
             </div>
         </div>
-        <!-- Distribution of Population by District -->
+        <!-- Population by District -->
         <div id="distributionByDistrict">
 
             <div id="distribute-district">
-                <div> Distribution of Population by District </div>
+                <div> Population by District </div>
                 <!-- Select district -->
                 <div id="district-label">
                     <select onchange="" id="county-districts-selection"> 
@@ -79,7 +79,6 @@
         <!-- Download 2008 Census data -->
         <div id="downloadData">
             <div> Download 2008 Census data</div>
-            <!-- white bgcol and display flex -->
             <div id="arrowTxt">
                 <div id="arrow">
                     <a href="./census-2008.json" title="download census 2008" download="census-2008.json">
@@ -91,12 +90,11 @@
                 </div>
             </div>
         </div>
-        <!-- Distribution of Population by Number of Households -->
+        <!-- Population by Number of Households -->
         <div id="distributionByHousehold">
             <div id="housesData">
                 <div id="housesText">
-                    <div> Distribution of Population by House </div>
-                    <!-- Select district -->
+                    <div> Population by House </div>
                     <div>
                         <select onchange="" id="county-houses-selection">
                             <option value="select" disabled>Select</option>
@@ -105,8 +103,8 @@
                 </div><br> <br> <br>
                 <div class="houses-chart" style="position: relative;"><canvas id="houses-chart"></canvas></div>
             </div>
-            <div id="mostPopulationPerCouunty">
-                <div>Counties with most males & females
+            <div id="mostPopulatedCounties">
+                <div>Top 5 populated counties
                 </div> <br>
                 <div>
                     <table>
@@ -127,7 +125,6 @@
     </main>
     <b style="color: #519872; margin: auto 40%;">&copy;benjamin-a-ngafua</b>
     <script type="text/javascript" src="./census.js"></script>
-    <!-- <script type="text/javascript" src="./c-census.json"></script> -->
 </body>
 
 </html>
