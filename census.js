@@ -128,22 +128,25 @@ class CountiesDropdown extends GeneralInheritance {
     const County = await this.GetCountiesWithoutDuplicate();
 
     const LoadedCounties = County.forEach((county) => {
-      this.Option.insertAdjacentHTML("beforeend", `<option>${county}</option>`);
+      this.Option.insertAdjacentHTML(
+        "beforeend",
+        `<option value="${county}">${county}</option>`
+      );
     });
 
     return LoadedCounties;
   }
 
-  async SelectCounty(callback) {
-    const FetchData = await this.FetchData();
-    this.QueryDom("#county-districts-selection").onchange = (event) => {
+  SelectCounty(callback) {
+    this.QueryDom("#county-districts-selection").onchange = async (event) => {
+      const FetchData = await this.FetchData();
+
       const districts_name = [];
       const district_male = [];
       const district_female = [];
 
       FetchData.forEach((ele) => {
         if (ele.county === event.target.value) {
-          console.log(ele.county, event.target.value);
           districts_name.push(ele.district);
           district_male.push(ele.male);
           district_female.push(ele.female);
@@ -161,50 +164,57 @@ class PopulationByDistrict extends CountiesDropdown {
   async DisplayDistricts() {
     const ctx = document.getElementById("district").getContext("2d");
 
-    if (window.chart != undefined) {
-      window.chart.destroy();
+    if (!window.chart) {
+      window.chart = null;
     }
 
-    window.chart = new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: [],
-        datasets: [
-          {
-            label: "Male",
-            backgroundColor: "#D3D3D3",
-            data: [],
-            borderRadius: 5,
-            barThickness: 30,
-          },
-          {
-            label: "Female",
-            backgroundColor: "#519872",
-            data: [],
-            borderRadius: 5,
-            barPercentage: 0.5,
-          },
-        ],
-      },
-      options: {
-        legend: { display: false },
-        title: {
-          display: true,
-          text: "Predicted Liberia population (millions) in 2008",
-        },
-        maintainAspectRatio: false,
-      },
-    });
-
     this.SelectCounty((CountiesDetail) => {
-      if (!CountiesDetail) {
-        console.error("Error getting County");
+      if (
+        !CountiesDetail ||
+        !CountiesDetail[0]?.length ||
+        !CountiesDetail[1]?.length ||
+        !CountiesDetail[2]?.length
+      ) {
+        console.error("Invalid data for the selected county:", CountiesDetail);
+        alert("No valid data available for the selected county.");
         return;
       }
-      window.chart.data.labels = CountiesDetail[0];
-      window.chart.data.datasets[0].data = CountiesDetail[1];
-      window.chart.data.datasets[1].data = CountiesDetail[2];
-      window.chart.update();
+
+      if (window.chart !== null) {
+        window.chart.destroy();
+        window.chart = null;
+      }
+
+      window.chart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: CountiesDetail[0],
+          datasets: [
+            {
+              label: "Male",
+              backgroundColor: "#D3D3D3",
+              data: CountiesDetail[1],
+              borderRadius: 5,
+              barThickness: 30,
+            },
+            {
+              label: "Female",
+              backgroundColor: "#519872",
+              data: CountiesDetail[2],
+              borderRadius: 5,
+              barPercentage: 0.5,
+            },
+          ],
+        },
+        options: {
+          legend: { display: false },
+          title: {
+            display: true,
+            text: "Predicted Liberia population (millions) in 2008",
+          },
+          maintainAspectRatio: false,
+        },
+      });
     });
   }
 }
