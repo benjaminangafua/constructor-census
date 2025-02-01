@@ -57,18 +57,6 @@ class TotalHeadCount {
   }
 }
 
-class PopulationByCounty extends TotalHeadCount {
-  constructor(data) {
-    super(data);
-  }
-  async displayCounties() {
-    const Vals = await this.FetchData();
-    console.log(Vals);
-  }
-}
-new PopulationByCounty("./census.json").displayCounties().then();
-new TotalHeadCount("./census.json").setupFunction().then();
-
 class GeneralInheritance extends TotalHeadCount {
   constructor(data) {
     super(data);
@@ -81,6 +69,7 @@ class GeneralInheritance extends TotalHeadCount {
       }
       return acc;
     }, []);
+
     return eachCounty;
   }
 
@@ -93,7 +82,11 @@ class GeneralInheritance extends TotalHeadCount {
     );
     return population_per_county;
   }
-
+}
+class PopulationByCounty extends GeneralInheritance {
+  constructor(data) {
+    super(data);
+  }
   async DisplayCountyBarChart() {
     new Chart(document.getElementById("county-chart"), {
       type: "bar",
@@ -103,7 +96,7 @@ class GeneralInheritance extends TotalHeadCount {
           {
             label: "Population Per County",
             backgroundColor: "#519872",
-            data: await this.PopulationPerCounty(), //data for labels (1st label)
+            data: await this.PopulationPerCounty(),
             borderRadius: 5,
             width: 1,
             barThickness: 15,
@@ -120,6 +113,106 @@ class GeneralInheritance extends TotalHeadCount {
       },
     });
   }
+  async displayCounties() {
+    const Vals = await this.FetchData();
+    console.log(Vals);
+  }
 }
 
-new GeneralInheritance("./census.json").DisplayCountyBarChart().then();
+class CountiesDropdown extends GeneralInheritance {
+  constructor(data) {
+    super(data);
+    this.Option = this.QueryDom("#county-districts-selection");
+  }
+  async LoadDropdownOfCounties() {
+    const County = await this.GetCountiesWithoutDuplicate();
+
+    const LoadedCounties = County.forEach((county) => {
+      this.Option.insertAdjacentHTML("beforeend", `<option>${county}</option>`);
+    });
+
+    return LoadedCounties;
+  }
+
+  async SelectCounty(callback) {
+    const FetchData = await this.FetchData();
+    this.QueryDom("#county-districts-selection").onchange = (event) => {
+      const districts_name = [];
+      const district_male = [];
+      const district_female = [];
+
+      FetchData.forEach((ele) => {
+        if (ele.county === event.target.value) {
+          console.log(ele.county, event.target.value);
+          districts_name.push(ele.district);
+          district_male.push(ele.male);
+          district_female.push(ele.female);
+        }
+      });
+      callback([districts_name, district_male, district_female]);
+    };
+  }
+}
+
+class PopulationByDistrict extends CountiesDropdown {
+  constructor(data) {
+    super(data);
+  }
+  async DisplayDistricts() {
+    const ctx = document.getElementById("district").getContext("2d");
+
+    if (window.chart != undefined) {
+      window.chart.destroy();
+    }
+
+    window.chart = new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: [],
+        datasets: [
+          {
+            label: "Male",
+            backgroundColor: "#D3D3D3",
+            data: [],
+            borderRadius: 5,
+            barThickness: 30,
+          },
+          {
+            label: "Female",
+            backgroundColor: "#519872",
+            data: [],
+            borderRadius: 5,
+            barPercentage: 0.5,
+          },
+        ],
+      },
+      options: {
+        legend: { display: false },
+        title: {
+          display: true,
+          text: "Predicted Liberia population (millions) in 2008",
+        },
+        maintainAspectRatio: false,
+      },
+    });
+
+    this.SelectCounty((CountiesDetail) => {
+      if (!CountiesDetail) {
+        console.error("Error getting County");
+        return;
+      }
+      window.chart.data.labels = CountiesDetail[0];
+      window.chart.data.datasets[0].data = CountiesDetail[1];
+      window.chart.data.datasets[1].data = CountiesDetail[2];
+      window.chart.update();
+    });
+  }
+}
+
+new TotalHeadCount("./census.json").setupFunction().then();
+new PopulationByCounty("./census.json").DisplayCountyBarChart().then();
+
+new CountiesDropdown("./census.json").SelectCounty();
+
+new CountiesDropdown("./census.json").LoadDropdownOfCounties().then();
+new PopulationByDistrict("./census.json").DisplayDistricts().then();
