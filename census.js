@@ -83,6 +83,7 @@ class GeneralInheritance extends TotalHeadCount {
     return population_per_county;
   }
 }
+
 class PopulationByCounty extends GeneralInheritance {
   constructor(data) {
     super(data);
@@ -164,58 +165,95 @@ class PopulationByDistrict extends CountiesDropdown {
   async DisplayDistricts() {
     const ctx = document.getElementById("district").getContext("2d");
 
-    if (!window.chart) {
-      window.chart = null;
+    // Load dropdown options first
+    await this.LoadDropdownOfCounties();
+    const dropdown = this.QueryDom("#county-districts-selection");
+
+    if (!dropdown.options.length) {
+      alert("No counties available.");
+      return;
     }
 
-    this.SelectCounty((CountiesDetail) => {
-      if (
-        !CountiesDetail ||
-        !CountiesDetail[0]?.length ||
-        !CountiesDetail[1]?.length ||
-        !CountiesDetail[2]?.length
-      ) {
-        console.error("Invalid data for the selected county:", CountiesDetail);
-        alert("No valid data available for the selected county.");
-        return;
-      }
+    const defaultCounty = [...dropdown.options].find(
+      (opt) => !opt.disabled && opt.value.trim() !== ""
+    )?.value;
 
-      if (window.chart !== null) {
-        window.chart.destroy();
-        window.chart = null;
-      }
+    if (!defaultCounty) {
+      alert("No valid county available.");
+      return;
+    }
 
+    dropdown.value = defaultCounty; // Set as selected
+
+    // Fetch data and filter for selected county
+    const FetchData = await this.FetchData();
+    const CountiesDetail = FetchData.reduce(
+      (result, ele) => {
+        if (ele.county === defaultCounty) {
+          result[0].push(ele.district);
+          result[1].push(ele.male);
+          result[2].push(ele.female);
+        }
+        return result;
+      },
+      [[], [], []]
+    );
+
+    // If no valid data, show alert
+    if (!CountiesDetail[0].length) {
+      alert("No valid data for the selected county.");
+      return;
+    }
+
+    // Function to update the chart
+    const updateChart = (data) => {
+      if (window.chart) window.chart.destroy();
       window.chart = new Chart(ctx, {
         type: "bar",
         data: {
-          labels: CountiesDetail[0],
+          labels: data[0],
           datasets: [
             {
               label: "Male",
               backgroundColor: "#D3D3D3",
-              data: CountiesDetail[1],
+              data: data[1],
               borderRadius: 5,
-              barThickness: 30,
+              width: 1,
+              barThickness: 15,
             },
             {
               label: "Female",
               backgroundColor: "#519872",
-              data: CountiesDetail[2],
+              data: data[2],
               borderRadius: 5,
-              barPercentage: 0.5,
+              width: 1,
+              barThickness: 15,
             },
           ],
         },
-        options: {
-          legend: { display: false },
-          title: {
-            display: true,
-            text: "Predicted Liberia population (millions) in 2008",
-          },
-          maintainAspectRatio: false,
-        },
+        options: { responsive: true, maintainAspectRatio: false },
       });
-    });
+    };
+
+    // Show default chart
+    updateChart(CountiesDetail);
+
+    // Handle dropdown change
+    dropdown.onchange = async (event) => {
+      const selectedCounty = event.target.value;
+      const newDetail = FetchData.reduce(
+        (res, ele) => {
+          if (ele.county === selectedCounty) {
+            res[0].push(ele.district);
+            res[1].push(ele.male);
+            res[2].push(ele.female);
+          }
+          return res;
+        },
+        [[], [], []]
+      );
+      updateChart(newDetail);
+    };
   }
 }
 
