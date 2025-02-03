@@ -9,6 +9,11 @@ class TotalHeadCount {
       .then((resp) => resp.json())
       .then((data) => data.population);
   }
+  async HouseholdFetchData() {
+    return await fetch(this.data)
+      .then((resp) => resp.json())
+      .then((data) => data.households);
+  }
   async compute() {
     const fetch = await this.FetchData();
     const male = fetch.reduce((acc, cur) => acc + cur.male, 0);
@@ -219,15 +224,14 @@ class PopulationByDistrict extends CountiesDropdown {
               data: data[1],
               borderRadius: 5,
               width: 1,
-              barThickness: 15,
+              barThickness: 30,
             },
             {
               label: "Female",
               backgroundColor: "#519872",
               data: data[2],
               borderRadius: 5,
-              width: 1,
-              barThickness: 15,
+              barPercentage: 0.5,
             },
           ],
         },
@@ -257,10 +261,169 @@ class PopulationByDistrict extends CountiesDropdown {
   }
 }
 
+class CountiesDropdownForHousehold extends GeneralInheritance {
+  constructor(data) {
+    super(data);
+    this.Option = this.QueryDom("#county-houses-selection");
+  }
+  async LoadDropdownOfCounties() {
+    const County = await this.GetCountiesWithoutDuplicate();
+
+    const LoadedCounties = County.forEach((county) => {
+      this.Option.insertAdjacentHTML(
+        "beforeend",
+        `<option value="${county}">${county}</option>`
+      );
+    });
+
+    return LoadedCounties;
+  }
+
+  SelectCounty(callback) {
+    this.QueryDom("#county-houses-selection").onchange = async (event) => {
+      const FetchData = await this.FetchData();
+
+      const districts_name = [];
+      const district_male = [];
+      const district_female = [];
+
+      FetchData.forEach((ele) => {
+        if (ele.county === event.target.value) {
+          districts_name.push(ele.district);
+          district_male.push(ele.male);
+          district_female.push(ele.female);
+        }
+      });
+      callback([districts_name, district_male, district_female]);
+    };
+  }
+}
+
+class PopulationByHousehold extends CountiesDropdownForHousehold {
+  constructor(data) {
+    super(data);
+  }
+  async DisplayHouseholds() {
+    const ctx = document.getElementById("houses-chart").getContext("2d");
+
+    // Load dropdown options first
+    await this.LoadDropdownOfCounties();
+    const dropdown = this.QueryDom("#county-houses-selection");
+
+    if (!dropdown.options.length) {
+      alert("No counties available.");
+      return;
+    }
+
+    const defaultCounty = [...dropdown.options].find(
+      (opt) => !opt.disabled && opt.value.trim() !== ""
+    )?.value;
+
+    if (!defaultCounty) {
+      alert("No valid county available.");
+      return;
+    }
+
+    dropdown.value = defaultCounty; // Set as selected
+
+    // Fetch data and filter for selected county
+    const FetchData = await this.HouseholdFetchData();
+    const CountiesDetail = FetchData.reduce(
+      (result, ele) => {
+        if (ele.county === defaultCounty) {
+          result[0].push(ele.settlement);
+          result[1].push(ele.male);
+          result[2].push(ele.female);
+          result[3].push(ele.household_number);
+        }
+        return result;
+      },
+      [[], [], [], []]
+    );
+
+    // If no valid data, show alert
+    if (!CountiesDetail[0].length) {
+      alert("No valid data for the selected county.");
+      return;
+    }
+
+    // Function to update the chart
+    const updateChart = (data) => {
+      if (window.householdsChart) window.householdsChart.destroy();
+
+      window.householdsChart = new Chart(ctx, {
+        type: "bar",
+        data: {
+          labels: data[0],
+          datasets: [
+            {
+              label: "Male",
+              backgroundColor: "#D3D3D3",
+              data: data[1],
+              borderRadius: 5,
+              barThickness: 35,
+              barPercentage: 0.1,
+            },
+            {
+              label: "Female",
+              backgroundColor: "#519872",
+              data: data[2],
+              borderRadius: 5,
+              barThickness: 25,
+              barPercentage: 0.3,
+            },
+            {
+              label: "Households Number",
+              backgroundColor: "#128949",
+              data: data[3],
+              borderRadius: 5,
+              barThickness: 35,
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            legend: {
+              display: true,
+            },
+          },
+        },
+      });
+    };
+
+    // Show default chart
+    updateChart(CountiesDetail);
+
+    // Handle dropdown change
+    dropdown.onchange = async (event) => {
+      const selectedCounty = event.target.value;
+      const newDetail = FetchData.reduce(
+        (res, ele) => {
+          if (ele.county === selectedCounty) {
+            res[0].push(ele.settlement);
+            res[1].push(ele.male);
+            res[2].push(ele.female);
+            res[3].push(ele.household_number);
+          }
+          return res;
+        },
+        [[], [], [], []]
+      );
+      updateChart(newDetail);
+    };
+  }
+}
+
 new TotalHeadCount("./census.json").setupFunction().then();
 new PopulationByCounty("./census.json").DisplayCountyBarChart().then();
 
 new CountiesDropdown("./census.json").SelectCounty();
+new CountiesDropdownForHousehold("./census.json").SelectCounty();
+new CountiesDropdownForHousehold("./census.json")
+  .LoadDropdownOfCounties()
+  .then();
 
 new CountiesDropdown("./census.json").LoadDropdownOfCounties().then();
+
 new PopulationByDistrict("./census.json").DisplayDistricts().then();
+new PopulationByHousehold("./census.json").DisplayHouseholds().then();
